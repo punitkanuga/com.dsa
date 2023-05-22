@@ -1,0 +1,37 @@
+public class RightRotatedArrayCount {
+
+    /*
+    Given an array arr[] of size N having distinct numbers sorted in increasing order and the array has been
+     right rotated (i.e, the last element will be cyclically shifted to the starting position of the array)
+      k number of times, the task is to find the value of k.
+     */
+
+    public static void main(String[] args) {
+        int [] input = {15, 18, 2, 3, 6, 12};
+        System.out.println(findRightRotationCount(input));
+    }
+
+    // basically we are finding minimum element here as that will be displaced by number of rotations.
+    private static int findRightRotationCount (int[] input) {
+        int low=0, high=input.length-1;
+
+        while(low<high) {
+            int mid = (low+high)/2;
+
+            if(input[low] < input[mid] && input[mid] < input[high]) {
+                return low;
+            }
+
+            if(input[high] < input[mid]) {
+                if(high - low == 1) { // needed when array becomes [18, 2] -> without this leads to infinite loop
+                    return high;
+                }
+                low=mid;
+            } else {
+                high=mid;
+            }
+        } // end- while
+        return low;
+    }
+
+}
