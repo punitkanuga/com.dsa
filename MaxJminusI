@@ -1,0 +1,39 @@
+public class MaxJminusI {
+    public static void main(String[] args) {
+        int[] input = {34, 8, 10, 3, 2, 80, 30, 33, 1};
+        System.out.println(findMaxJminusI(input));
+    }
+
+
+    private static int findMaxJminusI(int[] input) {
+        int i=0;
+        int j=input.length-1;
+
+        while(i<j) {
+            int result = checkCombination(input, i, j);
+            if(result != -1) {
+                return  result;
+            } else {
+                result = checkCombination(input, i+1, j);
+                if (result != -1) {
+                    return result;
+                } else {
+                    result = checkCombination(input, i, j-1);
+                    if (result != -1) {
+                        return result;
+                    }
+                    i=i+1;
+                    j=j-1;
+                }
+            }
+        }
+        return -1;
+    }
+
+    private static int checkCombination(int[] input, int i, int j) {
+        if(input[i] <= input[j]) {
+            return j-i;
+        }
+        return -1;
+    }
+}
