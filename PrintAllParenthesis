@@ -1,0 +1,24 @@
+public class PrintAllParenthesis {
+    public static void main(String[] args) {
+        int n=3;
+        char[] str = new char[2*n];
+        printParenthesis(str, 0, n, 0 ,0);
+    }
+
+    private static void printParenthesis(char[] str, int curPos, int max, int open, int close) {
+        if(close == max) {
+            System.out.println(String.valueOf(str));
+        }
+
+        if(open < max) {
+            str[curPos] = '{';
+            printParenthesis(str, curPos + 1, max, open+1, close);
+        }
+
+        if(close < open) {
+            str[curPos] = '}';
+            printParenthesis(str, curPos +1, max, open, close + 1);
+        }
+
+    }
+}
