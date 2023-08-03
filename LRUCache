@@ -1,0 +1,68 @@
+package practise;
+
+import java.util.*;
+
+
+public class LRUCache {
+
+    private class Pair {
+        int value;
+        int location;
+
+        Pair(int value, int location) {
+            this.location=location;
+            this.value=value;
+        }
+    }
+
+    int cacheSize;
+    HashMap<Integer, Pair> cache;
+    ArrayList<Integer> usageList;
+
+    LRUCache(int cacheSize) {
+        this.cacheSize = cacheSize;
+        this.cache = new HashMap<>();
+        this.usageList = new ArrayList<>(cacheSize);
+    }
+
+    public void refer(int key) {
+        if(cache.containsKey(key)) {
+            int usageLocation = cache.get(key).location;
+            usageList.remove(usageLocation);
+            usageList.add(usageList.size(), key);
+            System.out.println("Key referred, updated at queue location: " + key + " - " + (usageList.size()-1));
+        } else {
+            if(cache.keySet().size() == cacheSize) {
+                int removeKey = usageList.remove(0);
+                cache.remove(removeKey);
+                System.out.println("Removed key: " + removeKey);
+            }
+            insert(cache, usageList, key);
+        }
+    }
+
+    private void insert(HashMap<Integer, Pair> cache, ArrayList<Integer> usageList,
+                               int key) {
+        int usageLocation = usageList.size();
+        Pair pair = new Pair(key, usageLocation);
+        cache.put(key, pair);
+        usageList.add(usageLocation, key);
+        System.out.println("Added key at location:  " + key + " - " + usageLocation);
+    }
+
+    public static void main(String[] args) {
+        LRUCache cache = new LRUCache(3);
+
+        cache.refer(1);
+        cache.refer(1);
+        cache.refer(2);
+        cache.refer(3);
+        cache.refer(3);
+        cache.refer(4);
+        cache.refer(1);
+        cache.refer(5);
+
+    }
+
+}
+
