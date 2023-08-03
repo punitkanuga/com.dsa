@@ -1,0 +1,75 @@
+package practise;
+
+import java.util.HashMap;
+import java.util.Map;
+
+/*
+Here there is no specific value for a key. Hence, we are keeping "key" itself as the value in Pair.
+Further, in case a key can't be referred, there is no DB to fetch the "value" from.
+Hence, we are just inserting both key and value as "key" and "key" there, along with frequency set as 1.
+ */
+
+public class LFUCache {
+
+    private class Pair {
+        int value;
+        int frequency;
+
+        public Pair(int value, int frequency) {
+            this.value = value;
+            this.frequency = frequency;
+        }
+    }
+
+    int cacheSize;
+    HashMap<Integer, Pair> cache;
+
+    LFUCache(int cacheSize) {
+        this.cacheSize = cacheSize;
+        this.cache = new HashMap<>();
+    }
+
+    public void refer(int key) {
+        if(cache.containsKey(key)) {
+            cache.get(key).frequency++;
+            System.out.println("Key & Count: " + key + " - " + cache.get(key).frequency);
+        } else {
+            if(cache.keySet().size() == cacheSize) {
+                int lfuKey = findLFU(cache);
+                cache.remove(lfuKey);
+                System.out.println("Removed key: " + lfuKey);
+            }
+            Pair pair = new Pair(key, 1);
+            cache.put(key, pair);
+            System.out.println("Added key: " + key);
+        }
+    }
+
+    private static int findLFU(HashMap<Integer, Pair> cache) {
+        int minValue = Integer.MAX_VALUE;
+        int lfuKey=0;
+        for(Map.Entry<Integer, Pair> entry: cache.entrySet()) {
+            if(entry.getValue().frequency < minValue) {
+                minValue = entry.getValue().frequency;
+                lfuKey = entry.getKey();
+            }
+        }
+        return lfuKey;
+    }
+
+    public static void main(String[] args) {
+        LFUCache cache = new LFUCache(3);
+
+        cache.refer(1);
+        cache.refer(1);
+        cache.refer(2);
+        cache.refer(3);
+        cache.refer(3);
+        cache.refer(4); // 2 should be removed, 4 should be added
+        cache.refer(1);
+        cache.refer(5); //
+
+    }
+
+}
+
